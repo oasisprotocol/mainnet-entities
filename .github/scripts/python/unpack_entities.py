@@ -100,6 +100,11 @@ def validate_entity_package(package_path):
     node_descriptor = cbor.loads(
         base64.b64decode(node_genesis['untrusted_raw_value']))
 
+    if 'v' not in entity_descriptor:
+        logger.warning(
+            'Expected entity descriptor at "%s" to have a version. Please update your entity.' % entity_genesis_path)
+        is_valid = False
+
     entity_nodes = entity_descriptor['nodes'] or []
 
     if not node_descriptor['id'] in entity_nodes:
