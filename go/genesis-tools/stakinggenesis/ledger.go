@@ -38,8 +38,8 @@ func Create(options GenesisOptions) (*staking.Genesis, error) {
 }
 
 func (g *genesisCreator) create() (*staking.Genesis, error) {
-	g.genesis.Ledger = make(map[signature.PublicKey]*staking.Account)
-	g.genesis.Delegations = make(map[signature.PublicKey]map[signature.PublicKey]*staking.Delegation)
+	g.genesis.Ledger = make(map[staking.Address]*staking.Account)
+	g.genesis.Delegations = make(map[staking.Address]map[staking.Address]*staking.Delegation)
 
 	g.precisionConstant = quantity.NewQuantity()
 	_ = g.precisionConstant.FromInt64(g.options.PrecisionConstant)
@@ -100,12 +100,14 @@ func (g *genesisCreator) toQuantity(v int64) *quantity.Quantity {
 }
 
 func (g *genesisCreator) setupEntity(ent *entity.Entity, tokenBalance int64, tokensInEscrow int64) {
-	g.setLedgerForEntity(ent.ID, tokenBalance, tokensInEscrow)
-	g.setDelegation(ent.ID, ent.ID, tokensInEscrow)
+	entityAddr := staking.NewAddress(ent.ID)
+
+	g.setLedgerForEntity(entityAddr, tokenBalance, tokensInEscrow)
+	g.setDelegation(entityAddr, entityAddr, tokensInEscrow)
 }
 
-func (g *genesisCreator) setLedgerForEntity(entityPubKey signature.PublicKey, tokenBalance int64, tokensInEscrow int64) {
-	g.genesis.Ledger[entityPubKey] = &staking.Account{
+func (g *genesisCreator) setLedgerForEntity(entityAddr staking.Address, tokenBalance int64, tokensInEscrow int64) {
+	g.genesis.Ledger[entityAddr] = &staking.Account{
 		General: staking.GeneralAccount{
 			Balance: *g.toStakingQuantity(tokenBalance),
 			Nonce:   0,
@@ -123,15 +125,15 @@ func (g *genesisCreator) setLedgerForEntity(entityPubKey signature.PublicKey, to
 	}
 }
 
-func (g *genesisCreator) setDelegation(fromEntityPubKey signature.PublicKey, toEntityPubKey signature.PublicKey, tokensToEscrow int64) {
-	delegations, ok := g.genesis.Delegations[toEntityPubKey]
+func (g *genesisCreator) setDelegation(fromEntityAddr staking.Address, toEntityAddr staking.Address, tokensToEscrow int64) {
+	delegations, ok := g.genesis.Delegations[toEntityAddr]
 	if !ok {
-		delegations = make(map[signature.PublicKey]*staking.Delegation)
+		delegations = make(map[staking.Address]*staking.Delegation)
 	}
-	delegations[fromEntityPubKey] = &staking.Delegation{
+	delegations[fromEntityAddr] = &staking.Delegation{
 		Shares: *g.toStakingQuantity(tokensToEscrow),
 	}
-	g.genesis.Delegations[toEntityPubKey] = delegations
+	g.genesis.Delegations[toEntityAddr] = delegations
 }
 
 func (g *genesisCreator) setupFaucet() error {
@@ -149,19 +151,21 @@ func (g *genesisCreator) setupFaucet() error {
 		return err
 	}
 
-	g.setLedgerForEntity(faucetPubKey, g.options.FaucetAmount, 0)
+	faucetAddr := staking.NewAddress(faucetPubKey)
+
+	g.setLedgerForEntity(faucetAddr, g.options.FaucetAmount, 0)
 	return nil
 }
 
 func (g *genesisCreator) calculateCommonPool() error {
-	var entityTotalBalances map[signature.PublicKey]*quantity.Quantity
+	var entityTotalBalances map[staking.Address]*quantity.Quantity
 	var err error
 
 	allocatedTokens := quantity.NewQuantity()
 
 	// Iterate through all of the accounts on the ledger
-	for entityPubKey, account := range g.genesis.Ledger {
-		q, ok := entityTotalBalances[entityPubKey]
+	for entityAddress, account := range g.genesis.Ledger {
+		q, ok := entityTotalBalances[entityAddress]
 		if !ok {
 			q = quantity.NewQuantity()
 		}
