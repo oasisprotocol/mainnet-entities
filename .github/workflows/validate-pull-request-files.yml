@@ -49,7 +49,7 @@ jobs:
 
       # Temporarily use a local oasis-node release
       - name: Download oasis-node
-        run: curl -Lo /tmp/oasis-node https://buildkite.com/organizations/oasisprotocol/pipelines/oasis-core-ci/builds/54/jobs/25dafa27-a752-4224-a430-81606fe31c24/artifacts/6fcd63e6-100e-4388-9951-3b50703ef477
+        run: curl -Lo /tmp/oasis-node https://buildkite.com/organizations/oasisprotocol/pipelines/oasis-core-ci/builds/217/jobs/16a0c50e-e8cb-41b8-ac63-c84b19649315/artifacts/a584b74e-0f29-4a91-a364-b5cabebf691d
       - name: make oasis-node executable
         run: chmod +x /tmp/oasis-node
 
