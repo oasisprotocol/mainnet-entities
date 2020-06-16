@@ -1,12 +1,12 @@
 {
   "thresholds": {
-    "entity": "0",
-    "node-validator": "0",
-    "node-compute": "0",
-    "node-storage": "0",
-    "node-keymanager": "0",
-    "runtime-compute": "0",
-    "runtime-keymanager": "0"
+    "entity": "100000000000",
+    "node-validator": "100000000000",
+    "node-compute": "100000000000",
+    "node-storage": "100000000000",
+    "node-keymanager": "100000000000",
+    "runtime-compute": "100000000000",
+    "runtime-keymanager": "100000000000"
   },
   "debonding_interval": 10,
   "reward_schedule": [

@@ -55,7 +55,6 @@ def main():
         '--consensus.backend', 'tendermint',
         '--scheduler.max_validators', '100',
         '--scheduler.max_validators_per_entity', '1',
-        '--scheduler.min_validators', '10',
     ]
 
     add_entities_from_directory(
@@ -64,6 +63,9 @@ def main():
     if oasis_test_only:
         add_entities_from_directory(
             genesis_command, test_entities_path, add_nodes=oasis_test_only)
+        genesis_command.extend(['--scheduler.min_validators', '3'])
+    else:
+        genesis_command.extend(['--scheduler.min_validators', '10'])
 
     # Run genesis command
     subprocess.check_call(genesis_command)

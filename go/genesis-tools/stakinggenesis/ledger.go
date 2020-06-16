@@ -212,16 +212,25 @@ func (g *genesisCreator) loadConsensusParameters() error {
 		g.genesis.Parameters = params
 		return nil
 	}
-	b, err := ioutil.ReadFile(g.options.ConsensusParametersPath)
+	params, err := LoadStakingConsensusParameters(g.options.ConsensusParametersPath)
 	if err != nil {
 		return err
+	}
+	g.genesis.Parameters = *params
+	return nil
+}
+
+// LoadStakingConsensusParameters - Load Staking Consensus Params from a file
+func LoadStakingConsensusParameters(path string) (*staking.ConsensusParameters, error) {
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
 	}
 
 	var params staking.ConsensusParameters
 	err = json.Unmarshal(b, &params)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	g.genesis.Parameters = params
-	return nil
+	return &params, nil
 }
