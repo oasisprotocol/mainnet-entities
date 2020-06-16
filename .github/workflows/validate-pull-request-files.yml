@@ -1,6 +1,6 @@
 name: Validate Entity Package PR
 
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   validate_package_file_name:
@@ -17,8 +17,6 @@ jobs:
         with:
           go-version: '1.13.x'
 
-      - run: cd go/genesis-tools && go build . && cp genesis-tools /tmp/genesis-tools
-
       - run: pip3 install -r .github/scripts/python/requirements.txt
 
       - name: Validate the entity package name during a pull request
@@ -26,64 +24,3 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         if: github.event_name == 'pull_request'
-
-      - name: Validate entity packages
-        run: mkdir /tmp/unpack && python3 .github/scripts/python/unpack_entities.py ./entities /tmp/unpack
-
-      - name: Generate a pre-production staking genesis
-        run: >-
-          /tmp/genesis-tools staking_genesis
-          --staking.entities_dir /tmp/unpack
-          --staking.params .github/pre_prod_staking_params.json
-          --log.level debug
-          --staking.default_self_escrow 10000
-          --output-path /tmp/staking.pre_prod.json
-
-      #- name: Download oasis-node
-      #  run: curl -Lo /tmp/oasis-node.tar.gz https://github.com/oasislabs/oasis-core/releases/download/v20.3.2/oasis_core_linux_amd64.tar.gz
-
-      #- name: Unpack oasis-node
-      #  run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && chmod +x /tmp/oasis-node
-
-      # Temporarily use a local oasis-node release
-      - name: Download oasis-node
-        run: curl -Lo /tmp/oasis-node https://buildkite.com/organizations/oasisprotocol/pipelines/oasis-core-ci/builds/217/jobs/16a0c50e-e8cb-41b8-ac63-c84b19649315/artifacts/a584b74e-0f29-4a91-a364-b5cabebf691d
-      - name: make oasis-node executable
-        run: chmod +x /tmp/oasis-node
-
-      - name: Generate a "pre-production" genesis document
-        run: GENESIS_OUTPUT_PATH=/tmp/genesis.pre_prod.json STAKING_GENESIS_PATH=/tmp/staking.pre_prod.json python3 .github/scripts/python/generate_genesis.py /tmp/unpack
-
-      - name: Sanity check genesis file
-        run: /tmp/oasis-node genesis check --genesis.file /tmp/genesis.pre_prod.json
-
-      - name: Upload the "pre-production" genesis document
-        uses: actions/upload-artifact@v1
-        with:
-          name: genesis.pre_prod.json
-          path: /tmp/genesis.pre_prod.json
-
-      - name: Validate test only entity packages
-        run: mkdir /tmp/test_only_unpack && python3 .github/scripts/python/unpack_entities.py ./test_only_entities /tmp/test_only_unpack
-
-      - name: Generate a test only staking genesis
-        run: >-
-          /tmp/genesis-tools staking_genesis
-          --staking.entities_dir /tmp/unpack
-          --staking.entities_dir /tmp/test_only_unpack
-          --staking.params .github/test_only_staking_params.json
-          --log.level debug
-          --staking.default_self_escrow 10000
-          --output-path /tmp/staking.test_only.json
-
-      - name: Generate a test only genesis document
-        run: GENESIS_OUTPUT_PATH=/tmp/genesis.test_only.json STAKING_GENESIS_PATH=/tmp/staking.test_only.json OASIS_TEST_ONLY=true python3 .github/scripts/python/generate_genesis.py /tmp/unpack /tmp/test_only_unpack
-
-      - name: Sanity check genesis file
-        run: /tmp/oasis-node genesis check --genesis.file /tmp/genesis.test_only.json
-
-      - name: Upload the "test_only" genesis document
-        uses: actions/upload-artifact@v1
-        with:
-          name: genesis.test_only.json
-          path: /tmp/genesis.test_only.json
