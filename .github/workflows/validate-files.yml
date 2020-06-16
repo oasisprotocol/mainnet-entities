@@ -1,6 +1,6 @@
 name: Validate Entity Packages
 
-on: push
+on: [push, pull_request]
 
 jobs:
   validate_entity_packages:
