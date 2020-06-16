@@ -42,6 +42,7 @@ jobs:
       # Temporarily use a local oasis-node release
       - name: Download oasis-node
         run: curl -Lo /tmp/oasis-node https://buildkite.com/organizations/oasisprotocol/pipelines/oasis-core-ci/builds/217/jobs/16a0c50e-e8cb-41b8-ac63-c84b19649315/artifacts/a584b74e-0f29-4a91-a364-b5cabebf691d
+
       - name: make oasis-node executable
         run: chmod +x /tmp/oasis-node
 
@@ -72,6 +73,9 @@ jobs:
 
       - name: Generate a test only genesis document
         run: GENESIS_OUTPUT_PATH=/tmp/genesis.test_only.json STAKING_GENESIS_PATH=/tmp/staking.test_only.json OASIS_TEST_ONLY=true python3 .github/scripts/python/generate_genesis.py /tmp/unpack /tmp/test_only_unpack
+
+      - name: Dry run the genesis file
+        run: python3 .github/scripts/python/oasis_node_dry_run.py /tmp/oasis-node /tmp/genesis.test_only.json
 
       - name: Sanity check genesis file
         run: /tmp/oasis-node genesis check --genesis.file /tmp/genesis.test_only.json
