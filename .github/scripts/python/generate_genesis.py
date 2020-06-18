@@ -65,7 +65,7 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
              test_only, genesis_time):
 
     # LOADING ALLOCATIONS HERE IS A HACK FOR NOW... Lazy
-    allocations = yaml.load(open(genesis_allocations_path))
+    allocations = yaml.safe_load(open(genesis_allocations_path))
 
     # Dupes don't matter
     for name, allocation in allocations.copy().items():
