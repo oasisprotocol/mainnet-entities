@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
@@ -14,18 +16,15 @@ import (
 )
 
 const (
-	cfgFaucetAddress           = "staking.faucet.address"
-	cfgFaucetAmount            = "staking.faucet.amount"
-	cfgTotalSupply             = "staking.total_supply"
-	cfgPrecisionConstant       = "staking.precision_constant"
-	cfgEntitiesDirectoryPaths  = "staking.entities_dir"
-	cfgStakingParametersPath   = "staking.params"
-	cfgDefaultFundingAmount    = "staking.default_funding"
-	cfgDefaultSelfEscrowAmount = "staking.default_self_escrow"
-	cfgOutputPath              = "output-path"
-	defaultPrecisionConstant   = 1_000_000_000
-	defaultTotalSupply         = 10_000_000_000
-	defaultSelfEscrowAmount    = 100
+	cfgTotalSupply            = "staking.total_supply"
+	cfgPrecisionConstant      = "staking.precision_constant"
+	cfgEntitiesDirectoryPaths = "staking.entities_dir"
+	cfgStakingParametersPath  = "staking.params"
+	cfgEntitiesToFund         = "staking.entities_to_fund"
+	cfgGenesisAllocationsPath = "staking.allocations"
+	cfgOutputPath             = "output-path"
+	defaultPrecisionConstant  = 1_000_000_000
+	defaultTotalSupply        = 10_000_000_000
 )
 
 var (
@@ -43,15 +42,26 @@ var (
 )
 
 func doStakingGenesis(cmd *cobra.Command, args []string) {
+	precisionConstant := viper.GetInt64(cfgPrecisionConstant)
+
+	entitiesToFundUnParsed := viper.GetStringSlice(cfgEntitiesToFund)
+	entitiesToFund := make(map[string]int64)
+	for _, value := range entitiesToFundUnParsed {
+		split := strings.SplitN(value, ":", 2)
+		fundAmount, err := strconv.ParseInt(split[1], 10, 64)
+		if err != nil {
+			panic("entities to fund need to have numbers")
+		}
+		entitiesToFund[split[0]] = fundAmount
+	}
+
 	options := stakinggenesis.GenesisOptions{
-		FaucetBase64Address:     viper.GetString(cfgFaucetAddress),
-		FaucetAmount:            viper.GetInt64(cfgFaucetAmount),
-		TotalSupply:             viper.GetInt64(cfgTotalSupply),
-		PrecisionConstant:       viper.GetInt64(cfgPrecisionConstant),
-		EntitiesDirectoryPaths:  viper.GetStringSlice(cfgEntitiesDirectoryPaths),
-		ConsensusParametersPath: viper.GetString(cfgStakingParametersPath),
-		DefaultFundingAmount:    viper.GetInt64(cfgDefaultFundingAmount),
-		DefaultSelfEscrowAmount: viper.GetInt64(cfgDefaultSelfEscrowAmount),
+		TotalSupply:              viper.GetInt64(cfgTotalSupply),
+		PrecisionConstant:        precisionConstant,
+		AdditionalEntitiesToFund: entitiesToFund,
+		MinimumStake:             1,
+		EntitiesDirectoryPaths:   viper.GetStringSlice(cfgEntitiesDirectoryPaths),
+		ConsensusParametersPath:  viper.GetString(cfgStakingParametersPath),
 	}
 
 	if err := nodeCmdCommon.Init(); err != nil {
@@ -64,11 +74,19 @@ func doStakingGenesis(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
+	genesisAllocationsPath := viper.GetString(cfgGenesisAllocationsPath)
+	allocations, err := stakinggenesis.NewGenesisAllocationsFromFile(genesisAllocationsPath, uint64(precisionConstant))
+	if err != nil {
+		logger.Error("error loading genesis allocations")
+		os.Exit(1)
+	}
+
 	if len(options.EntitiesDirectoryPaths) < 1 {
 		logger.Error("must define an entities directory path")
 		os.Exit(1)
 	}
-	entitiesDir, err := stakinggenesis.LoadEntitiesDirectory(options.EntitiesDirectoryPaths)
+
+	entitiesDir, err := stakinggenesis.LoadEntitiesDirectory(allocations, options.EntitiesDirectoryPaths)
 	if err != nil {
 		logger.Error("Cannot load entities",
 			"err", err,
@@ -97,17 +115,16 @@ func doStakingGenesis(cmd *cobra.Command, args []string) {
 
 // RegisterForTestingCmd registers the for-testing subcommand.
 func RegisterStakingGenesisCmd(parentCmd *cobra.Command) {
-	stakingGenesisFlags.Int64(cfgFaucetAmount, 0, "amount to fund (in whole tokens)")
-	stakingGenesisFlags.String(cfgFaucetAddress, "", "faucet address (base64 encoded)")
 	stakingGenesisFlags.Int64(cfgTotalSupply, defaultTotalSupply, "Total supply of tokens (in whole tokens)")
 	stakingGenesisFlags.Int64(cfgPrecisionConstant, defaultPrecisionConstant,
 		"the precision constant for a single token defaults to 10^18")
 	stakingGenesisFlags.StringSlice(cfgEntitiesDirectoryPaths, []string{}, "a directory entities")
 	stakingGenesisFlags.String(cfgStakingParametersPath, "",
 		"a consensus params json file (defaults to using ./consensus_params.json relative to entities directory)")
-	stakingGenesisFlags.Int64(cfgDefaultFundingAmount, 0, "Default funding amount")
-	stakingGenesisFlags.Int64(cfgDefaultSelfEscrowAmount, defaultSelfEscrowAmount, "Default amount to self escrow")
+	stakingGenesisFlags.String(cfgGenesisAllocationsPath, "",
+		"a yaml file used to setup the funding allocations per account")
 	stakingGenesisFlags.String(cfgOutputPath, "", "output path for the staking ledger")
+	stakingGenesisFlags.StringSlice(cfgEntitiesToFund, []string{}, "public key to funding amount")
 	_ = viper.BindPFlags(stakingGenesisFlags)
 
 	stakingGenesisCmd.Flags().AddFlagSet(stakingGenesisFlags)

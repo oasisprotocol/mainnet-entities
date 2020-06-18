@@ -9,6 +9,7 @@ import (
 
 	"github.com/oasisprotocol/oasis-core/go/common/entity"
 	"github.com/oasisprotocol/oasis-core/go/common/logging"
+	"github.com/oasisprotocol/oasis-core/go/common/quantity"
 	registry "github.com/oasisprotocol/oasis-core/go/registry/api"
 )
 
@@ -16,22 +17,36 @@ var (
 	logger = logging.GetLogger("stakinggenesis")
 )
 
+type EntityInfo struct {
+	ledgerAllocation *quantity.Quantity
+	descriptor       *entity.Entity
+}
+
+func NewEntityInfo(ledgerAllocation *quantity.Quantity, descriptor *entity.Entity) *EntityInfo {
+	return &EntityInfo{
+		ledgerAllocation: ledgerAllocation,
+		descriptor:       descriptor,
+	}
+}
+
 type Entities interface {
-	All() map[string]*entity.Entity
-	ResolveEntity(name string) (*entity.Entity, error)
+	All() map[string]*EntityInfo
+	ResolveEntity(name string) (*EntityInfo, error)
 }
 
 // EntitiesDirectory is a set of directories of unpacked entities packages.
 type EntitiesDirectory struct {
 	paths []string
 
+	allocations GenesisAllocations
+
 	// A map of Entity Names to the Entity object
-	entities map[string]*entity.Entity
+	entities map[string]*EntityInfo
 }
 
 // LoadEntitiesDirectory loads a directory of unpacked entity packages.
-func LoadEntitiesDirectory(dirPaths []string) (*EntitiesDirectory, error) {
-	dir := &EntitiesDirectory{paths: dirPaths}
+func LoadEntitiesDirectory(allocations GenesisAllocations, dirPaths []string) (*EntitiesDirectory, error) {
+	dir := &EntitiesDirectory{allocations: allocations, paths: dirPaths}
 
 	dir.Load()
 
@@ -46,12 +61,14 @@ func isFile(path string) bool {
 	return !info.IsDir()
 }
 
-func (e *EntitiesDirectory) All() map[string]*entity.Entity {
+func (e *EntitiesDirectory) All() map[string]*EntityInfo {
 	return e.entities
 }
 
+// Load loads a directory of entities. This should a directory of unpacked
+// entity packages.
 func (e *EntitiesDirectory) Load() error {
-	e.entities = make(map[string]*entity.Entity)
+	e.entities = make(map[string]*EntityInfo)
 	for _, dirPath := range e.paths {
 		err := e.loadDir(dirPath)
 		if err != nil {
@@ -61,8 +78,6 @@ func (e *EntitiesDirectory) Load() error {
 	return nil
 }
 
-// Load loads a directory of entities. This should a directory of unpacked
-// entity packages.
 func (e *EntitiesDirectory) loadDir(dirPath string) error {
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -80,18 +95,23 @@ func (e *EntitiesDirectory) loadDir(dirPath string) error {
 		if err != nil {
 			return err
 		}
-		e.entities[entityName] = ent
+		allocation := e.allocations.ResolveAllocation(entityName)
+
+		e.entities[entityName] = &EntityInfo{
+			ledgerAllocation: allocation,
+			descriptor:       ent,
+		}
 	}
 	return nil
 }
 
 // ResolveEntity resolves an entity name to an Entity.
-func (e *EntitiesDirectory) ResolveEntity(name string) (*entity.Entity, error) {
-	ent, ok := e.entities[name]
+func (e *EntitiesDirectory) ResolveEntity(name string) (*EntityInfo, error) {
+	info, ok := e.entities[name]
 	if !ok {
 		return nil, fmt.Errorf("Entity %s does not exist", name)
 	}
-	return ent, nil
+	return info, nil
 }
 
 func (e *EntitiesDirectory) loadEntityDir(dirPath string, entityName string) (*entity.Entity, error) {

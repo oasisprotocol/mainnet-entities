@@ -18,21 +18,21 @@ import (
 
 type fakeEntities struct {
 	count    int
-	entities map[string]*entity.Entity
+	entities map[string]*stakinggenesis.EntityInfo
 }
 
-func MakeFakeEntities(count int) *fakeEntities {
+func MakeFakeEntities(count int, allocation uint64) *fakeEntities {
 	e := fakeEntities{
 		count:    count,
-		entities: make(map[string]*entity.Entity),
+		entities: make(map[string]*stakinggenesis.EntityInfo),
 	}
-	e.generateAll()
+	e.generateAll(allocation)
 	return &e
 }
 
-func (e *fakeEntities) generateAll() {
+func (e *fakeEntities) generateAll(allocation uint64) {
 	for i := 0; i < e.count; i++ {
-		ent, err := e.generateEntity()
+		ent, err := e.generateEntity(allocation)
 		if err != nil {
 			panic(err)
 		}
@@ -40,7 +40,7 @@ func (e *fakeEntities) generateAll() {
 	}
 }
 
-func (e *fakeEntities) generateEntity() (*entity.Entity, error) {
+func (e *fakeEntities) generateEntity(allocation uint64) (*stakinggenesis.EntityInfo, error) {
 	dir, err := ioutil.TempDir("", "prefix")
 	if err != nil {
 		return nil, err
@@ -56,28 +56,28 @@ func (e *fakeEntities) generateEntity() (*entity.Entity, error) {
 	ent, _, err := entity.Generate(dir, signerFactory, &entity.Entity{
 		AllowEntitySignedNodes: false,
 	})
+
+	info := stakinggenesis.NewEntityInfo(quantity.NewFromUint64(allocation), ent)
 	if err != nil {
 		return nil, err
 	}
-	return ent, nil
+	return info, nil
 }
 
-func (e *fakeEntities) All() map[string]*entity.Entity {
+func (e *fakeEntities) All() map[string]*stakinggenesis.EntityInfo {
 	return e.entities
 }
 
-func (e *fakeEntities) ResolveEntity(name string) (*entity.Entity, error) {
+func (e *fakeEntities) ResolveEntity(name string) (*stakinggenesis.EntityInfo, error) {
 	return nil, nil
 }
 
 func genericGenesisOptions(entCount int) stakinggenesis.GenesisOptions {
-	entities := MakeFakeEntities(entCount)
+	entities := MakeFakeEntities(entCount, 2500)
 	return stakinggenesis.GenesisOptions{
-		Entities:                entities,
-		TotalSupply:             10_000_000_000,
-		PrecisionConstant:       10,
-		DefaultSelfEscrowAmount: 250,
-		DefaultFundingAmount:    250,
+		Entities:          entities,
+		TotalSupply:       10_000_000_000,
+		PrecisionConstant: 10,
 		ConsensusParametersLoader: func() staking.ConsensusParameters {
 			return staking.ConsensusParameters{}
 		},
@@ -90,23 +90,24 @@ func TestGenerateStakingLedger(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	require.Equal(t, "99999950000", genesis.CommonPool.String())
+	require.Equal(t, "99999975000", genesis.CommonPool.String())
 }
 
 func TestGenerateStakingLedgerWithFaucet(t *testing.T) {
 	options := genericGenesisOptions(10)
-	options.FaucetBase64Address = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa="
-	options.FaucetAmount = 1_000_000
+	options.AdditionalEntitiesToFund = map[string]int64{
+		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=": 1_000_000,
+	}
 	genesis, err := stakinggenesis.Create(options)
 	if err != nil {
 		require.NoError(t, err)
 	}
-	require.Equal(t, "99989950000", genesis.CommonPool.String())
+	require.Equal(t, "99989975000", genesis.CommonPool.String())
 }
 
 func TestLoadStakingParameters(t *testing.T) {
 	// This is a bit brittle
-	params, err := stakinggenesis.LoadStakingConsensusParameters("fixtures/staking_ledger.json")
+	params, err := stakinggenesis.LoadStakingConsensusParameters("fixtures/staking_params.json")
 
 	require.NoError(t, err)
 

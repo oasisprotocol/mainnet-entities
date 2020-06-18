@@ -1,0 +1,8 @@
+{
+    "params": {
+        "gas_costs": {
+            "compute_commit": 10000,
+            "merge_commit": 10000
+        }
+    }
+}

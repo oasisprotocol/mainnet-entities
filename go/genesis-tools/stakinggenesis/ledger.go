@@ -5,22 +5,20 @@ import (
 	"io/ioutil"
 
 	"github.com/oasisprotocol/oasis-core/go/common/crypto/signature"
-	"github.com/oasisprotocol/oasis-core/go/common/entity"
 	"github.com/oasisprotocol/oasis-core/go/common/quantity"
 	staking "github.com/oasisprotocol/oasis-core/go/staking/api"
 )
 
 // GenesisOptions options for the staking genesis document.
 type GenesisOptions struct {
-	FaucetBase64Address       string
-	FaucetAmount              int64
+	AdditionalEntitiesToFund  map[string]int64
 	TotalSupply               int64
 	PrecisionConstant         int64
 	EntitiesDirectoryPaths    []string
+	GenesisAllocations        GenesisAllocations
+	MinimumStake              int64
 	ConsensusParametersPath   string
 	ConsensusParametersLoader func() staking.ConsensusParameters
-	DefaultFundingAmount      int64
-	DefaultSelfEscrowAmount   int64
 	Entities                  Entities
 }
 
@@ -45,6 +43,7 @@ func (g *genesisCreator) create() (*staking.Genesis, error) {
 	_ = g.precisionConstant.FromInt64(g.options.PrecisionConstant)
 
 	logger.Debug("Setup total supply")
+
 	// Setup total supply
 	totalSupply := g.toStakingQuantity(g.options.TotalSupply)
 	g.genesis.TotalSupply = *totalSupply
@@ -58,7 +57,7 @@ func (g *genesisCreator) create() (*staking.Genesis, error) {
 
 	logger.Debug("Setting up the faucet")
 	// Setup Faucet
-	err = g.setupFaucet()
+	err = g.setupAdditionalEntitiesToFund()
 	if err != nil {
 		return nil, err
 	}
@@ -66,8 +65,8 @@ func (g *genesisCreator) create() (*staking.Genesis, error) {
 	logger.Debug("Loading all entitiy")
 	// TODO Add a way to load a custom ledger amount
 	// Load all entities and fund them
-	for _, ent := range g.options.Entities.All() {
-		g.setupEntity(ent, g.options.DefaultFundingAmount, g.options.DefaultSelfEscrowAmount)
+	for _, info := range g.options.Entities.All() {
+		g.setupEntity(info)
 	}
 
 	logger.Debug("Calculate the common pool amount")
@@ -99,23 +98,36 @@ func (g *genesisCreator) toQuantity(v int64) *quantity.Quantity {
 	return q
 }
 
-func (g *genesisCreator) setupEntity(ent *entity.Entity, tokenBalance int64, tokensInEscrow int64) {
-	entityAddr := staking.NewAddress(ent.ID)
+func (g *genesisCreator) setupEntity(info *EntityInfo) {
+	entityAddr := staking.NewAddress(info.descriptor.ID)
 
-	g.setLedgerForEntity(entityAddr, tokenBalance, tokensInEscrow)
-	g.setDelegation(entityAddr, entityAddr, tokensInEscrow)
+	if info.ledgerAllocation.Cmp(g.toStakingQuantity(g.options.MinimumStake)) < 0 {
+		// Skip this entity
+		return
+	}
+
+	// Keep a single token in the general balance (unstaked)
+	// Stake the remaining balance
+	unstaked := g.toStakingQuantity(0)
+	staked := info.ledgerAllocation.Clone()
+
+	// subtract the token from the staked balance
+	staked.Sub(unstaked)
+
+	g.setLedgerForEntity(entityAddr, unstaked, staked)
+	g.setDelegation(entityAddr, entityAddr, staked)
 }
 
-func (g *genesisCreator) setLedgerForEntity(entityAddr staking.Address, tokenBalance int64, tokensInEscrow int64) {
+func (g *genesisCreator) setLedgerForEntity(entityAddr staking.Address, tokenBalance *quantity.Quantity, tokensInEscrow *quantity.Quantity) {
 	g.genesis.Ledger[entityAddr] = &staking.Account{
 		General: staking.GeneralAccount{
-			Balance: *g.toStakingQuantity(tokenBalance),
+			Balance: *tokenBalance,
 			Nonce:   0,
 		},
 		Escrow: staking.EscrowAccount{
 			Active: staking.SharePool{
-				Balance:     *g.toStakingQuantity(tokensInEscrow),
-				TotalShares: *g.toStakingQuantity(tokensInEscrow),
+				Balance:     *tokensInEscrow,
+				TotalShares: *tokensInEscrow,
 			},
 			Debonding: staking.SharePool{
 				Balance:     *g.toStakingQuantity(0),
@@ -125,35 +137,36 @@ func (g *genesisCreator) setLedgerForEntity(entityAddr staking.Address, tokenBal
 	}
 }
 
-func (g *genesisCreator) setDelegation(fromEntityAddr staking.Address, toEntityAddr staking.Address, tokensToEscrow int64) {
+func (g *genesisCreator) setDelegation(fromEntityAddr staking.Address, toEntityAddr staking.Address, tokensToEscrow *quantity.Quantity) {
 	delegations, ok := g.genesis.Delegations[toEntityAddr]
 	if !ok {
 		delegations = make(map[staking.Address]*staking.Delegation)
 	}
 	delegations[fromEntityAddr] = &staking.Delegation{
-		Shares: *g.toStakingQuantity(tokensToEscrow),
+		Shares: *tokensToEscrow,
 	}
 	g.genesis.Delegations[toEntityAddr] = delegations
 }
 
-func (g *genesisCreator) setupFaucet() error {
-	if g.options.FaucetBase64Address == "" {
-		return nil
-	}
-
-	// Load faucet public key from the base64 string
-	var faucetPubKey signature.PublicKey
-	err := faucetPubKey.UnmarshalText([]byte(g.options.FaucetBase64Address))
-	if err != nil {
-		logger.Error("error loading faucet public key",
-			"err", err,
+func (g *genesisCreator) setupAdditionalEntitiesToFund() error {
+	for pubKeyString, amount := range g.options.AdditionalEntitiesToFund {
+		var pubKey signature.PublicKey
+		err := pubKey.UnmarshalText([]byte(pubKeyString))
+		if err != nil {
+			logger.Error("error loading public key",
+				"err", err,
+				"pubKey", pubKeyString,
+			)
+			return err
+		}
+		stakingAddr := staking.NewAddress(pubKey)
+		logger.Info(
+			"funding key on ledger",
+			"pubKey", pubKeyString,
+			"addr", stakingAddr.String(),
 		)
-		return err
+		g.setLedgerForEntity(stakingAddr, g.toStakingQuantity(amount), g.toStakingQuantity(0))
 	}
-
-	faucetAddr := staking.NewAddress(faucetPubKey)
-
-	g.setLedgerForEntity(faucetAddr, g.options.FaucetAmount, 0)
 	return nil
 }
 
@@ -199,11 +212,11 @@ func (g *genesisCreator) calculateCommonPool() error {
 }
 
 func (g *genesisCreator) resolveEntityPublicKey(name string) (*signature.PublicKey, error) {
-	ent, err := g.options.Entities.ResolveEntity(name)
+	info, err := g.options.Entities.ResolveEntity(name)
 	if err != nil {
 		return nil, err
 	}
-	return &ent.ID, nil
+	return &info.descriptor.ID, nil
 }
 
 func (g *genesisCreator) loadConsensusParameters() error {

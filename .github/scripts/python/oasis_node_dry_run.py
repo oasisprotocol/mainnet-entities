@@ -42,11 +42,14 @@ def main():
         os.mkdir(os.path.join(tmp_dir, 'node/genesis'), 0o700)
 
         with open(os.path.join(tmp_dir, 'node/config.yml'), 'w') as config_file:
-            config_file.write(
-                NODE_CONFIG_YML % dict(
-                    tmp_dir=tmp_dir
-                )
+            config_yml = NODE_CONFIG_YML % dict(
+                tmp_dir=tmp_dir
             )
+            print("Using this config")
+            print("-----------------")
+            print(config_yml)
+            print("-----------------")
+            config_file.write(config_yml)
 
         # Copy the genesis file
         shutil.copyfile(genesis_path, os.path.join(

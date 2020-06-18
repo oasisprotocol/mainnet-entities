@@ -1,0 +1,156 @@
+# Staking Ledger Allocations in YAML so we can comment as needed
+
+# This file is a simple "key": "value" where key is the github name and the
+# value is the quantity of tokens to assign. The tokens are whole tokens so
+# when they're translated in the staking ledger they will be multiplied by 1e9
+
+Alexxandr0: "25000"
+
+Bambarello: "55000"
+
+C-Surgeon: "30000"
+
+Code-Breader: "55000"
+
+Julia-Ju-Ju: "80000"
+
+Ostrovmaria80: "15000"
+
+PowerMax9999: "15000"
+
+SebastianJ: "1000000"
+
+Shella: "90000"
+
+SimplyVC: "1190000"
+
+SmartStake: "90000"
+
+UbikCapital: "55000"
+
+Wanderer-Cry: "55000"
+
+WolfEdgeCapital: "110000"
+
+ank-everstake: "150000"
+
+aptemuyc: "30000"
+
+ben-staked: "40000"
+
+bi23com: "50000"
+
+bitoven-dev: "565000"
+
+blockdaemon: "75000"
+
+blockdev345: "100000"
+
+calvinzhou-rockx: "25000"
+
+caramis: "65000"
+
+chadbean: "90000"
+
+chinoto: "10000"
+
+chorus-techops: "115000"
+
+codernpm: "150000"
+
+culmore2015: "135000"
+
+dcccapital: "515000"
+
+defunctzombie: "50000"
+
+dhruvmaloo: "115000"
+
+flankerted: "30000"
+
+flutterwin: "100000"
+
+gspina: "15000"
+
+gunray88: "50000"
+
+gxwuyingjun: "45000"
+
+himansh987: "100000"
+
+huglester: "15000"
+
+hydai: "5000"
+
+jacky860226: "10000"
+
+jjangg96: "5000"
+
+joesixpack: "10000"
+
+jonathan-geisler: "5000"
+
+k0kk0k: "80000"
+
+karmastic-BT: "450000"
+
+karmastic: "40000"
+
+kaustubhkapatral: "90000"
+
+keefertaylor: "60000"
+
+kwunyeung: "100000"
+
+lqyice: "815000"
+
+lymweb: "15000"
+
+lyoungblood: "60000"
+
+m4dbi7: "25000"
+
+marssuper: "190000"
+
+mattharrop: "85000"
+
+mohakagr: "50000"
+
+oceanabcde: "1265000"
+
+ponchik69: "55000"
+
+privatenerd: "125000"
+
+slavaAa129: "15000"
+
+spdd: "30000"
+
+spherical-one: "55000"
+
+sriney-staked: "65000"
+
+tjanez: "10000"
+
+validator01: "75000"
+
+wetezos: "165000"
+
+winslyn: "1550000"
+
+wjdfx: "190000"
+
+xudoubles: "15000"
+
+y3v63n: "225000"
+
+danielimkk: "10000"
+
+danielimkk-ankr: "10000"
+
+##
+# BELOW ARE ALLOCATIONS FOR TEST ONLY GENESIS DOCUMENTS
+##
+rvg: "100000"
+pro-wh: "100000"
+peterjgilbert: "100000"
