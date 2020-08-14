@@ -1,0 +1,44 @@
+{
+  "thresholds": {
+    "entity": "100000000000",
+    "node-validator": "100000000000",
+    "node-compute": "100000000000",
+    "node-storage": "100000000000",
+    "node-keymanager": "100000000000",
+    "runtime-compute": "100000000000",
+    "runtime-keymanager": "100000000000"
+  },
+  "debonding_interval": 10,
+  "reward_schedule": [
+    {
+      "until": 18446744073709551615,
+      "scale": "7"
+    }
+  ],
+  "signing_reward_threshold_numerator": 3,
+  "signing_reward_threshold_denominator": 4,
+  "commission_schedule_rules": {
+    "rate_change_interval": 1,
+    "rate_bound_lead": 14,
+    "max_rate_steps": 21,
+    "max_bound_steps": 21
+  },
+  "slashing": {
+    "0": {
+      "amount": "100000000000",
+      "freeze_interval": 18446744073709551615
+    }
+  },
+  "gas_costs": {
+    "add_escrow": 1000,
+    "burn": 1000,
+    "reclaim_escrow": 1000,
+    "transfer": 1000
+  },
+  "min_delegation": "10000000000",
+  "fee_split_weight_propose": "2",
+  "fee_split_weight_vote": "1",
+  "fee_split_weight_next_propose": "1",
+  "reward_factor_epoch_signed": "1",
+  "reward_factor_block_proposed": "0"
+}
