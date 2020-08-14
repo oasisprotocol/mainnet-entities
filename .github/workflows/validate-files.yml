@@ -1,0 +1,105 @@
+name: Validate Entity Packages
+
+on: [push, pull_request]
+
+jobs:
+  validate_entity_packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup Python 3
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.13.x'
+
+      - run: cd go/genesis-tools && go build . && cp genesis-tools /tmp/genesis-tools
+
+      - run: pip3 install -r .github/scripts/python/requirements.txt
+
+      - name: Validate entity packages
+        run: mkdir /tmp/unpack && python3 .github/scripts/python/unpack_entities.py ./entities /tmp/unpack
+
+      - name: Generate a pre-production staking genesis
+        run: >-
+          /tmp/genesis-tools staking_genesis
+          --staking.entities_dir /tmp/unpack
+          --staking.params .github/pre_prod_staking_params.json
+          --staking.allocations .github/genesis_allocations.yaml
+          --staking.entities_to_fund 7UFm7kLE8iAxEY7ABKWRYSgwkZ18g/U3e9xxdqBCUgM=:10000
+          --staking.entities_to_fund WJe0IeqhDIxU/r/Ywwf+T+acf3ACKUcLvlpaFPRRgMo=:1000000000
+          --staking.entities_to_fund OTcjUve0fn71+Q8xwNzBg65bFuhhPlBNY07xN5TZaiE=:500000000
+          --log.level debug
+          --output-path /tmp/staking.pre_prod.json
+
+      - name: Download oasis-node
+        run: curl -Lo /tmp/oasis_core_linux_amd64.tar.gz https://github.com/oasisprotocol/oasis-core/releases/download/v20.9/oasis_core_20.9_linux_amd64.tar.gz
+
+      - name: Unpack oasis-node
+        run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && chmod +x /tmp/oasis-node
+
+      - name: Generate a "pre-production" genesis document
+        run: >-
+          python3 .github/scripts/python/generate_genesis.py
+          --unpacked-entities-path /tmp/unpack
+          --oasis-node-path /tmp/oasis-node
+          --output-path /tmp/genesis.pre_prod.json
+          --test-time-output-path /tmp/genesis.pre_prod.test_time.json
+          --genesis-allocations-path .github/genesis_allocations.yaml
+          --staking-path /tmp/staking.pre_prod.json
+          --roothash-path .github/roothash_params.json
+          --chain-id-prefix mainnet-testing
+          --genesis-time 2020-08-12T16:00:00
+
+      - name: Upload the "pre-production" genesis document
+        uses: actions/upload-artifact@v1
+        with:
+          name: genesis.pre_prod.json
+          path: /tmp/genesis.pre_prod.json
+
+      - name: Sanity check genesis file
+        run: /tmp/oasis-node genesis check --genesis.file /tmp/genesis.pre_prod.test_time.json
+
+      - name: Validate test only entity packages
+        run: mkdir /tmp/test_only_unpack && python3 .github/scripts/python/unpack_entities.py ./test_only_entities /tmp/test_only_unpack
+
+      - name: Generate a test only staking genesis
+        run: >-
+          /tmp/genesis-tools staking_genesis
+          --staking.entities_dir /tmp/unpack
+          --staking.entities_dir /tmp/test_only_unpack
+          --staking.params .github/test_only_staking_params.json
+          --staking.allocations .github/genesis_allocations.yaml
+          --staking.entities_to_fund 7UFm7kLE8iAxEY7ABKWRYSgwkZ18g/U3e9xxdqBCUgM=:10000
+          --staking.entities_to_fund WJe0IeqhDIxU/r/Ywwf+T+acf3ACKUcLvlpaFPRRgMo=:1000000000
+          --staking.entities_to_fund OTcjUve0fn71+Q8xwNzBg65bFuhhPlBNY07xN5TZaiE=:500000000
+          --log.level debug
+          --output-path /tmp/staking.test_only.json
+
+      - name: Generate a test only genesis document
+        run: >-
+          python3 .github/scripts/python/generate_genesis.py
+          --unpacked-entities-path /tmp/unpack
+          --test-entities-path /tmp/test_only_unpack
+          --oasis-node-path /tmp/oasis-node
+          --output-path /tmp/genesis.test_only.json
+          --genesis-allocations-path .github/genesis_allocations.yaml
+          --staking-path /tmp/staking.test_only.json
+          --roothash-path .github/roothash_params.json
+          --test-only
+
+      - name: Upload the "test_only" genesis document
+        uses: actions/upload-artifact@v1
+        with:
+          name: genesis.test_only.json
+          path: /tmp/genesis.test_only.json
+
+      - name: Sanity check genesis file
+        run: /tmp/oasis-node genesis check --genesis.file /tmp/genesis.test_only.json
+
+      - name: Dry run the genesis file
+        run: python3 .github/scripts/python/oasis_node_dry_run.py /tmp/oasis-node /tmp/genesis.test_only.json

@@ -1,0 +1,4 @@
+cbor==1.0.0
+PyGithub==1.45
+PyYAML==5.3.1
+Click==7.0
