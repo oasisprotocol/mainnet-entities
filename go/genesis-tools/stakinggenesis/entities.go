@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/oasisprotocol/oasis-core/go/common/entity"
 	"github.com/oasisprotocol/oasis-core/go/common/logging"
@@ -96,7 +97,7 @@ func (e *EntitiesDirectory) loadDir(dirPath string) error {
 			return err
 		}
 
-		e.entities[entityName] = ent
+		e.entities[strings.ToLower(entityName)] = ent
 	}
 	return nil
 }
