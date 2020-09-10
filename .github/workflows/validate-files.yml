@@ -21,8 +21,20 @@ jobs:
 
       - run: pip3 install -r .github/scripts/python/requirements.txt
 
+      - name: Download oasis-node
+        run: curl -Lo /tmp/oasis_core_linux_amd64.tar.gz https://github.com/oasisprotocol/oasis-core/releases/download/v20.9/oasis_core_20.9_linux_amd64.tar.gz
+
+      - name: Unpack oasis-node
+        run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && chmod +x /tmp/oasis-node
+
       - name: Validate entity packages
         run: mkdir /tmp/unpack && python3 .github/scripts/python/unpack_entities.py ./entities /tmp/unpack
+
+      - name: Upload the "entity_list"
+        uses: actions/upload-artifact@v1
+        with:
+          name: entity_list.csv
+          path: /tmp/entity_list.csv
 
       - name: Generate a pre-production staking genesis
         run: >-
@@ -32,12 +44,6 @@ jobs:
           --staking.config .github/staking_config.yaml
           --log.level debug
           --output-path /tmp/staking.pre_prod.json
-
-      - name: Download oasis-node
-        run: curl -Lo /tmp/oasis_core_linux_amd64.tar.gz https://github.com/oasisprotocol/oasis-core/releases/download/v20.9/oasis_core_20.9_linux_amd64.tar.gz
-
-      - name: Unpack oasis-node
-        run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && chmod +x /tmp/oasis-node
 
       - name: Generate a "pre-production" genesis document
         run: >-
