@@ -97,7 +97,7 @@ entities:
   privatenerd: "10000"
   sili-infstones: "10000"
   spdd: "10000"
-  sriney-staked: "10000"
+  #sriney-staked: "10000"
   validator01: "10000"
   wetezos: "10000"
   winslyn: "10000"
