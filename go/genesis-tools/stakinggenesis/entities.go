@@ -22,31 +22,22 @@ type EntityInfo struct {
 	descriptor       *entity.Entity
 }
 
-func NewEntityInfo(ledgerAllocation *quantity.Quantity, descriptor *entity.Entity) *EntityInfo {
-	return &EntityInfo{
-		ledgerAllocation: ledgerAllocation,
-		descriptor:       descriptor,
-	}
-}
-
 type Entities interface {
-	All() map[string]*EntityInfo
-	ResolveEntity(name string) (*EntityInfo, error)
+	All() map[string]*entity.Entity
+	ResolveEntity(name string) *entity.Entity
 }
 
 // EntitiesDirectory is a set of directories of unpacked entities packages.
 type EntitiesDirectory struct {
 	paths []string
 
-	allocations GenesisAllocations
-
 	// A map of Entity Names to the Entity object
-	entities map[string]*EntityInfo
+	entities map[string]*entity.Entity
 }
 
 // LoadEntitiesDirectory loads a directory of unpacked entity packages.
-func LoadEntitiesDirectory(allocations GenesisAllocations, dirPaths []string) (*EntitiesDirectory, error) {
-	dir := &EntitiesDirectory{allocations: allocations, paths: dirPaths}
+func LoadEntitiesDirectory(dirPaths []string) (*EntitiesDirectory, error) {
+	dir := &EntitiesDirectory{paths: dirPaths}
 
 	dir.Load()
 
@@ -61,14 +52,23 @@ func isFile(path string) bool {
 	return !info.IsDir()
 }
 
-func (e *EntitiesDirectory) All() map[string]*EntityInfo {
+func (e *EntitiesDirectory) All() map[string]*entity.Entity {
 	return e.entities
+}
+
+func (e *EntitiesDirectory) ResolveEntity(name string) *entity.Entity {
+	ent, ok := e.entities[name]
+	if !ok {
+		return nil
+	}
+	return ent
 }
 
 // Load loads a directory of entities. This should a directory of unpacked
 // entity packages.
 func (e *EntitiesDirectory) Load() error {
-	e.entities = make(map[string]*EntityInfo)
+	e.entities = make(map[string]*entity.Entity)
+
 	for _, dirPath := range e.paths {
 		err := e.loadDir(dirPath)
 		if err != nil {
@@ -95,23 +95,10 @@ func (e *EntitiesDirectory) loadDir(dirPath string) error {
 		if err != nil {
 			return err
 		}
-		allocation := e.allocations.ResolveAllocation(entityName)
 
-		e.entities[entityName] = &EntityInfo{
-			ledgerAllocation: allocation,
-			descriptor:       ent,
-		}
+		e.entities[entityName] = ent
 	}
 	return nil
-}
-
-// ResolveEntity resolves an entity name to an Entity.
-func (e *EntitiesDirectory) ResolveEntity(name string) (*EntityInfo, error) {
-	info, ok := e.entities[name]
-	if !ok {
-		return nil, fmt.Errorf("Entity %s does not exist", name)
-	}
-	return info, nil
 }
 
 func (e *EntitiesDirectory) loadEntityDir(dirPath string, entityName string) (*entity.Entity, error) {

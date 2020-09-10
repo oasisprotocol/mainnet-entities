@@ -1,0 +1,53 @@
+# Staking Ledger Allocations in YAML so we can comment as needed
+
+# This file is a simple "key": "value" where key is the github name and the
+# value is the quantity of tokens to assign. The tokens are whole tokens so
+# when they're translated in the staking ledger they will be multiplied by 1e9
+
+# Accounts are not self staked and their public keys are defined here.
+# Additionally a mapping of `name: delegated_token_quantity` is contained in the
+# `delegate_to` section.
+accounts:
+  account1:
+    amount: "2000000000"
+    address: "oasis1qz2kz3zkgf6trclyajtyg4jecw7es7p5tutfqaz0"
+    outbound_delegations:
+      test2: "100000000"
+      test4: "1000"
+
+    test_only_outbound_delegations:
+      test3: "200000000"
+
+  account2:
+    amount: "1000000000"
+    address: "oasis1qz6hdmtth24x5udlvmavufwvy5ac6pvh2cdlehnx"
+    outbound_delegations:
+      test3: "100000000"
+
+    test_only_outbound_delegations:
+      test1: "300000000"
+
+
+# Entities are automatically self staked
+entities:
+  test1: "200000000"
+
+  Test2: "100000000"
+
+  test3: "1000"
+
+  test4: "0"
+
+# Entities only used for testing
+test_only_entities:
+  test5: "300000000"
+
+# This is the minimum balance that should be left in an account
+minimum_balance: 100
+token_value_exponent: 9
+token_symbol: ROSE
+total_supply: 10000000000
+
+commission_rate_max: 20000
+commission_rate_min: 0
+commission_rate: 5000

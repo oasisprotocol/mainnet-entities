@@ -13,11 +13,11 @@ replace (
 require (
 	github.com/dgraph-io/badger/v2 v2.0.3 // indirect
 	// https://github.com/oasisprotocol/oasis-core/releases/tag/v20.9
-	github.com/oasisprotocol/oasis-core/go v0.0.0-20200805122849-3e191ea91460
+	github.com/oasisprotocol/oasis-core/go v0.20.9
 	github.com/smartystreets/assertions v1.0.0 // indirect
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
-	gopkg.in/yaml.v2 v2.2.5
+	gopkg.in/yaml.v2 v2.3.0
 )
