@@ -29,10 +29,7 @@ jobs:
           /tmp/genesis-tools staking_genesis
           --staking.entities_dir /tmp/unpack
           --staking.params .github/pre_prod_staking_params.json
-          --staking.allocations .github/genesis_allocations.yaml
-          --staking.entities_to_fund 7UFm7kLE8iAxEY7ABKWRYSgwkZ18g/U3e9xxdqBCUgM=:10000
-          --staking.entities_to_fund WJe0IeqhDIxU/r/Ywwf+T+acf3ACKUcLvlpaFPRRgMo=:1000000000
-          --staking.entities_to_fund OTcjUve0fn71+Q8xwNzBg65bFuhhPlBNY07xN5TZaiE=:500000000
+          --staking.config .github/staking_config.yaml
           --log.level debug
           --output-path /tmp/staking.pre_prod.json
 
@@ -53,7 +50,7 @@ jobs:
           --staking-path /tmp/staking.pre_prod.json
           --roothash-path .github/roothash_params.json
           --chain-id-prefix mainnet-testing
-          --genesis-time 2020-08-12T16:00:00
+          --genesis-time 2020-09-30T16:00:00
 
       - name: Upload the "pre-production" genesis document
         uses: actions/upload-artifact@v1
@@ -73,10 +70,8 @@ jobs:
           --staking.entities_dir /tmp/unpack
           --staking.entities_dir /tmp/test_only_unpack
           --staking.params .github/test_only_staking_params.json
-          --staking.allocations .github/genesis_allocations.yaml
-          --staking.entities_to_fund 7UFm7kLE8iAxEY7ABKWRYSgwkZ18g/U3e9xxdqBCUgM=:10000
-          --staking.entities_to_fund WJe0IeqhDIxU/r/Ywwf+T+acf3ACKUcLvlpaFPRRgMo=:1000000000
-          --staking.entities_to_fund OTcjUve0fn71+Q8xwNzBg65bFuhhPlBNY07xN5TZaiE=:500000000
+          --staking.config .github/staking_config.yaml
+          --staking.test_only_genesis
           --log.level debug
           --output-path /tmp/staking.test_only.json
 
