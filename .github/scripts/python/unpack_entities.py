@@ -124,13 +124,13 @@ class EntityPackage(object):
     def address(self):
         if self._entity_descriptor is None:
             return "unknown_entity_package_invalid"
-        return address(base64.b64encode(self._entity_descriptor["id"]))
+        return address(base64.b64encode(self._entity_descriptor["id"])).decode('utf-8').strip()
 
     @property
     def entity_id(self):
         if self._entity_descriptor is None:
             return "unknown_entity_package_invalid"
-        return base64.b64encode(self._entity_descriptor["id"])
+        return base64.b64encode(self._entity_descriptor["id"]).decode('utf-8').strip()
 
     @property
     def name(self):
@@ -140,7 +140,7 @@ class EntityPackage(object):
     def node_id(self):
         if self._node_descriptor is None:
             return "unknown_entity_package_invalid"
-        return base64.b64encode(self._node_descriptor["id"])
+        return base64.b64encode(self._node_descriptor["id"]).decode('utf-8').strip()
 
 
 def unpack_entities(src_entities_dir_path, dest_entities_dir_path):
