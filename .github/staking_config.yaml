@@ -1,0 +1,51 @@
+# Staking Ledger Allocations in YAML so we can comment as needed
+
+# This file is a simple "key": "value" where key is the github name and the
+# value is the quantity of tokens to assign. The tokens are whole tokens so
+# when they're translated in the staking ledger they will be multiplied by 1e9
+accounts:
+  backers:
+    amount: "2300000000"
+    address: "oasis1qz2kz3zkgf6trclyajtyg4jecw7es7p5tutfqaz0"
+    outbound_delegations: {}
+
+  community_and_ecosystem:
+    amount: "2300000000"
+    address: "oasis1qqfjknq5jlelnfd0xtc38u9t25u467nasuzytpe3"
+    outbound_delegations: {}
+
+  core_contributors:
+    amount: "2000000000"
+    address: "oasis1qzpjtg2zhqqun6nmvclrtdmwuxeluj6pxgvedwzu"
+    outbound_delegations: {}
+
+  strategic_partners_and_reserve:
+    amount: "500000000"
+    address: "oasis1qpn5qckl50vfn0phmn545ufrypvfqqzhwgaprxv5"
+    outbound_delegations: {}
+
+  foundation_endowment:
+    amount: "1000000000"
+    address: "oasis1qpu9qf32765nl5ql8jkh6zmrlwvu23srecu5phac"
+    outbound_delegations: {}
+
+# This should be a dict of expected entity packages
+entities: {}
+
+##
+# BELOW ARE FUNDING ALLOCATIONS FOR TEST ONLY GENESIS DOCUMENTS
+##
+test_entities:
+  rvg: "100000"
+  #pro-wh: "100000"
+  peterjgilbert: "100000"
+
+# This is the minimum balance that should be left in an account
+minimum_balance: 100
+token_value_exponent: 9
+token_symbol: ROSE
+total_supply: 10000000000
+
+commission_rate_max: 20000
+commission_rate_min: 0
+commission_rate: 5000
