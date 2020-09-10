@@ -46,7 +46,6 @@ jobs:
           --oasis-node-path /tmp/oasis-node
           --output-path /tmp/genesis.pre_prod.json
           --test-time-output-path /tmp/genesis.pre_prod.test_time.json
-          --genesis-allocations-path .github/genesis_allocations.yaml
           --staking-path /tmp/staking.pre_prod.json
           --roothash-path .github/roothash_params.json
           --chain-id-prefix mainnet-testing
@@ -82,7 +81,6 @@ jobs:
           --test-entities-path /tmp/test_only_unpack
           --oasis-node-path /tmp/oasis-node
           --output-path /tmp/genesis.test_only.json
-          --genesis-allocations-path .github/genesis_allocations.yaml
           --staking-path /tmp/staking.test_only.json
           --roothash-path .github/roothash_params.json
           --test-only
