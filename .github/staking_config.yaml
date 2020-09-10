@@ -108,7 +108,7 @@ entities:
 ##
 # BELOW ARE FUNDING ALLOCATIONS FOR TEST ONLY GENESIS DOCUMENTS
 ##
-test_entities:
+test_only_entities:
   rvg: "100000"
   #pro-wh: "100000"
   peterjgilbert: "100000"
