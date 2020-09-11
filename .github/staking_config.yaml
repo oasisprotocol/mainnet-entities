@@ -38,8 +38,8 @@ csv_options:
 test_only_entities:
   rvg:
     funds: 100000
-  pro-wh:
-    funds: 100000
+  #pro-wh:
+    #funds: 100000
   peterjgilbert:
     funds: 100000
 
