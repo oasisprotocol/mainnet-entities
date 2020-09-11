@@ -51,10 +51,14 @@ def add_entities_from_directory(genesis_command, entity_dir, add_nodes):
               default=datetime.now().strftime(DATETIME_FORMAT),
               help='Date time of deployment in UTC as iso8601',
               type=click.DateTime(formats=[DATETIME_FORMAT]))
+@click.option('--halt-epoch', required=True)
+@click.option('--max-validators', required=True)
+@click.option('--min-validators', required=True)
 def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
              test_time_output_path, output_path, staking_path,
              roothash_path, chain_id_prefix,
-             test_only, genesis_time):
+             test_only, genesis_time, halt_epoch, max_validators,
+             min_validators):
 
     # THIS SCRIPT NO LONGER PRUNES NODES IF THEY DON'T HAVE ENOUGH STAKE. WE
     # WILL NEED TO DO THAT MANUALLY. THAT WAS TO SAVE FROM WRITING MORE HACKY
@@ -75,14 +79,17 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
         '--staking.token_symbol', 'ROSE',
         '--staking.token_value_exponent', '9',
         # TODO: what halt epoch to use for mainnet?
-        '--halt.epoch', '999999',
+        '--halt.epoch', halt_epoch,
         '--epochtime.tendermint.interval', '600',
         '--consensus.tendermint.timeout_commit', '5s',
         '--consensus.tendermint.empty_block_interval', '0s',
         '--consensus.tendermint.max_tx_size', '32kb',
+        '--consensus.state_checkpoint.chunk_size', '0mb',
+        '--consensus.state_checkpoint.interval', '0',
+        '--consensus.state_checkpoint.num_kept', '0',
         '--registry.max_node_expiration', '2',
         '--consensus.backend', 'tendermint',
-        '--scheduler.max_validators', '100',
+        '--scheduler.max_validators', max_validators,
         '--scheduler.max_validators_per_entity', '1',
     ]
 
@@ -100,7 +107,7 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
         )
         genesis_command.extend(['--scheduler.min_validators', '3'])
     else:
-        genesis_command.extend(['--scheduler.min_validators', '15'])
+        genesis_command.extend(['--scheduler.min_validators', min_validators])
 
     # Run genesis command
     subprocess.check_call(genesis_command)

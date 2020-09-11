@@ -57,6 +57,9 @@ jobs:
           --roothash-path .github/roothash_params.json
           --chain-id-prefix mainnet-dryrun
           --genesis-time 2020-09-17T16:00:00
+          --halt-epoch 336
+          --max-validators 80
+          --min-validators 15
 
       - name: Upload the "pre-production" genesis document
         uses: actions/upload-artifact@v1
@@ -91,6 +94,9 @@ jobs:
           --output-path /tmp/genesis.test_only.json
           --staking-path /tmp/staking.test_only.json
           --roothash-path .github/roothash_params.json
+          --halt-epoch 336
+          --max-validators 80
+          --min-validators 15
           --test-only
 
       - name: Upload the "test_only" genesis document
