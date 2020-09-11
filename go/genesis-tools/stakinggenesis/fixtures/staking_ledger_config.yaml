@@ -11,36 +11,34 @@ accounts:
   account1:
     amount: "2000000000"
     address: "oasis1qz2kz3zkgf6trclyajtyg4jecw7es7p5tutfqaz0"
-    outbound_delegations:
-      test2: "100000000"
-      test4: "1000"
-
-    test_only_outbound_delegations:
-      test3: "200000000"
+    csv_label: "Account One"
 
   account2:
     amount: "1000000000"
     address: "oasis1qz6hdmtth24x5udlvmavufwvy5ac6pvh2cdlehnx"
-    outbound_delegations:
-      test3: "100000000"
+    csv_label: "Account Two"
 
-    test_only_outbound_delegations:
-      test1: "300000000"
+csv_options:
+  # Column label to look for KYC data
+  kyc_label: "KYC Complete"
 
+  # Column label to look for entity package submitted data
+  entity_package_submitted_label: "Entity Submitted"
 
-# Entities are automatically self staked
-entities:
-  test1: "200000000"
+  # Column label to look for entity package name (this is the mapping from
+  # entity file names to an "account" name in the staking ledger app)
+  entity_package_name_label: "Entity Package Name"
 
-  Test2: "100000000"
-
-  test3: "1000"
-
-  test4: "0"
+  # Column label for the column that defines the funding for a given account
+  funding_label: "Total Rewards [sum of Quest + Grants, paid out from community & ecosystem]"
 
 # Entities only used for testing
 test_only_entities:
-  test5: "300000000"
+  test5:
+    funds: 300000000
+    delegations:
+      account1: 100000000
+
 
 # This is the minimum balance that should be left in an account
 minimum_balance: 100

@@ -14,11 +14,12 @@ import (
 )
 
 const (
-	cfgEntitiesDirPaths      = "staking.entities_dir"
-	cfgStakingParametersPath = "staking.params"
-	cfgGenesisConfigPath     = "staking.config"
-	cfgTestOnlyGenesis       = "staking.test_only_genesis"
-	cfgOutputPath            = "output-path"
+	cfgEntitiesDirPaths       = "staking.entities_dir"
+	cfgStakingParametersPath  = "staking.params"
+	cfgGenesisConfigPath      = "staking.config"
+	cfgGenesisAllocationsPath = "staking.allocations"
+	cfgTestOnlyGenesis        = "staking.test_only_genesis"
+	cfgOutputPath             = "output-path"
 )
 
 var (
@@ -58,6 +59,7 @@ func doStakingGenesis(cmd *cobra.Command, args []string) {
 		ConsensusParametersPath: viper.GetString(cfgStakingParametersPath),
 		ConfigurationPath:       viper.GetString(cfgGenesisConfigPath),
 		IsTestGenesis:           viper.GetBool(cfgTestOnlyGenesis),
+		AllocationsPath:         viper.GetString(cfgGenesisAllocationsPath),
 	}
 
 	outputPath := viper.GetString(cfgOutputPath)
@@ -90,7 +92,9 @@ func RegisterStakingGenesisCmd(parentCmd *cobra.Command) {
 	stakingGenesisFlags.String(cfgStakingParametersPath, "",
 		"a consensus params json file (defaults to using ./consensus_params.json relative to entities directory)")
 	stakingGenesisFlags.String(cfgGenesisConfigPath, "",
-		"a yaml file used to establish fund and delegation allocation on the staking ledger")
+		"a yaml file used to establish fund and delegation configuration on the staking ledger")
+	stakingGenesisFlags.String(cfgGenesisAllocationsPath, "",
+		"a csv file used to establish fund and delegation allocation on the staking ledger")
 	stakingGenesisFlags.String(cfgOutputPath, "", "output path for the staking ledger")
 	stakingGenesisFlags.Bool(cfgTestOnlyGenesis, false, "generate a test staking ledger")
 	_ = viper.BindPFlags(stakingGenesisFlags)

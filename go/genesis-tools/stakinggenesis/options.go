@@ -11,6 +11,7 @@ import (
 type GenesisOptions struct {
 	IsTestGenesis             bool
 	ConfigurationPath         string
+	AllocationsPath           string
 	ConsensusParametersPath   string
 	ConsensusParametersLoader func() staking.ConsensusParameters
 	Entities                  Entities

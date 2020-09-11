@@ -163,10 +163,11 @@ func (g *genesisTestValidator) requireDelegationShares(t *testing.T, from string
 	fromAddress := g.entityAddress(from)
 	toAddress := g.entityAddress(to)
 
+	_, ok := g.genesis.Delegations[toAddress][fromAddress]
 	if expected == 0 {
-		_, ok := g.genesis.Delegations[toAddress][fromAddress]
 		require.False(t, ok, "should not have a set of delegation shares")
 	} else {
+		require.True(t, ok, "should have a set of delegation shares")
 		shares := g.genesis.Delegations[toAddress][fromAddress].Shares
 		requireQuantityEqual(t, shares, expected)
 	}
@@ -197,6 +198,7 @@ func TestGenerateStakingLedger(t *testing.T) {
 		"test4",
 	})
 	options.ConfigurationPath = "fixtures/staking_ledger_config.yaml"
+	options.AllocationsPath = "fixtures/allocations.csv"
 	genesis, err := stakinggenesis.Create(options)
 	require.NoError(t, err)
 
@@ -240,6 +242,7 @@ func TestGenerateTestStakingLedger(t *testing.T) {
 		"test5",
 	})
 	options.ConfigurationPath = "fixtures/staking_ledger_config.yaml"
+	options.AllocationsPath = "fixtures/allocations.csv"
 	options.IsTestGenesis = true
 	genesis, err := stakinggenesis.Create(options)
 	require.NoError(t, err)
@@ -252,27 +255,29 @@ func TestGenerateTestStakingLedger(t *testing.T) {
 	)
 
 	validator.requireGeneralBalance(t, "test1", 100_000_000_000)
-	validator.requireEscrowBalance(t, "test1", 499_999_900_000_000_000)
+	validator.requireEscrowBalance(t, "test1", 199_999_900_000_000_000)
 	validator.requireDelegationShares(t, "test1", "test1", 199_999_900_000_000_000)
 
 	validator.requireGeneralBalance(t, "test2", 100_000_000_000)
 	validator.requireEscrowBalance(t, "test2", 199_999_900_000_000_000)
 
 	validator.requireGeneralBalance(t, "test3", 100_000_000_000)
-	validator.requireEscrowBalance(t, "test3", 300_000_900_000_000_000)
+	validator.requireEscrowBalance(t, "test3", 100_000_900_000_000_000)
 
 	validator.requireGeneralBalance(t, "test4", 0)
 	validator.requireEscrowBalance(t, "test4", 1_000_000_000_000)
 
 	validator.requireGeneralBalance(t, "test5", 100_000_000_000)
-	validator.requireEscrowBalance(t, "test5", 299_999_900_000_000_000)
+	validator.requireEscrowBalance(t, "test5", 399_999_900_000_000_000)
 
+	//validator.requireDelegationShares(t, "account1", "test1", 0)
 	validator.requireDelegationShares(t, "account1", "test1", 0)
 	validator.requireDelegationShares(t, "account1", "test2", 100_000_000_000_000_000)
-	validator.requireDelegationShares(t, "account1", "test3", 200_000_000_000_000_000)
+	validator.requireDelegationShares(t, "account1", "test3", 0)
 	validator.requireDelegationShares(t, "account1", "test4", 1_000_000_000_000)
+	validator.requireDelegationShares(t, "account1", "test5", 100_000_000_000_000_000)
 
-	validator.requireDelegationShares(t, "account2", "test1", 300_000_000_000_000_000)
+	validator.requireDelegationShares(t, "account2", "test1", 0)
 	validator.requireDelegationShares(t, "account2", "test2", 0)
 	validator.requireDelegationShares(t, "account2", "test3", 100_000_000_000_000_000)
 	validator.requireDelegationShares(t, "account2", "test4", 0)
