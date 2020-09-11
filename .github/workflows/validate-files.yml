@@ -42,6 +42,7 @@ jobs:
           --staking.entities_dir /tmp/unpack
           --staking.params .github/pre_prod_staking_params.json
           --staking.config .github/staking_config.yaml
+          --staking.allocations .github/allocations.csv
           --log.level debug
           --output-path /tmp/staking.pre_prod.json
 
@@ -76,6 +77,7 @@ jobs:
           --staking.entities_dir /tmp/test_only_unpack
           --staking.params .github/test_only_staking_params.json
           --staking.config .github/staking_config.yaml
+          --staking.allocations .github/allocations.csv
           --staking.test_only_genesis
           --log.level debug
           --output-path /tmp/staking.test_only.json

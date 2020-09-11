@@ -30,14 +30,18 @@ csv_options:
   kyc_label: "KYC Complete"
   entity_package_submitted_label: "Entity Submitted"
   entity_package_name_label: "Entity Package Name"
+  funding_label: "Total Rewards [sum of Quest + Grants, paid out from community & ecosystem]"
 
 ##
 # BELOW ARE FUNDING ALLOCATIONS FOR TEST ONLY GENESIS DOCUMENTS
 ##
 test_only_entities:
-  rvg: "100000"
-  pro-wh: "100000"
-  peterjgilbert: "100000"
+  rvg:
+    funds: 100000
+  pro-wh:
+    funds: 100000
+  peterjgilbert:
+    funds: 100000
 
 # This is the minimum balance that should be left in an account
 minimum_balance: 100
