@@ -11,7 +11,6 @@ replace (
 )
 
 require (
-	// https://github.com/oasisprotocol/oasis-core/releases/tag/v20.9
 	github.com/oasisprotocol/oasis-core/go v0.2010.0
 	github.com/smartystreets/assertions v1.0.0 // indirect
 	github.com/spf13/cobra v1.0.0
