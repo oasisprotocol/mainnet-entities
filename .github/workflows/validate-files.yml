@@ -25,7 +25,7 @@ jobs:
         run: curl -Lo /tmp/oasis_core_linux_amd64.tar.gz https://github.com/oasisprotocol/oasis-core/releases/download/v20.10/oasis_core_20.10_linux_amd64.tar.gz
 
       - name: Unpack oasis-node
-        run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && chmod +x /tmp/oasis-node
+        run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && mv oasis_core_20.10_linux_amd64/oasis-node /tmp/oasis-node && chmod +x /tmp/oasis-node
 
       - name: Validate entity packages
         run: mkdir /tmp/unpack && python3 .github/scripts/python/unpack_entities.py ./entities /tmp/unpack
