@@ -22,7 +22,7 @@ jobs:
       - run: pip3 install -r .github/scripts/python/requirements.txt
 
       - name: Download oasis-node
-        run: curl -Lo /tmp/oasis_core_linux_amd64.tar.gz https://github.com/oasisprotocol/oasis-core/releases/download/v20.9/oasis_core_20.9_linux_amd64.tar.gz
+        run: curl -Lo /tmp/oasis_core_linux_amd64.tar.gz https://github.com/oasisprotocol/oasis-core/releases/download/v20.10/oasis_core_20.10_linux_amd64.tar.gz
 
       - name: Unpack oasis-node
         run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && chmod +x /tmp/oasis-node
