@@ -65,10 +65,8 @@ jr,jrastit,jrastit,TRUE,TRUE,"10,000",,,0,0,"27,027,027","6,081,081","33,118,108
 Infinity Stones,sili-infstones,sili-infstones,TRUE,TRUE,0,,,0,0,"27,027,027","6,081,081","33,108,108",0.97%,99.09%
 THU-cdfa / Tsinghua University,xudoubles,xudoubles,TRUE,TRUE,0,,,"3,300,000","3,575,000",0,0,"6,875,000",0.20%,99.30%
 "Centre for Distributed Ledger Technologies, University of Malta",CentreDLTUM,CentreDLTUM,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.45%
-SSSNodes,gxwuyingjun,,TRUE,FALSE,,,,"2,280,000",0,0,0,,,99.45%
 Imperial College Blockchain Society,LRUki,LRUki_LBL_Imperial,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.61%
 Archibald,ostrovmaria80,ostrovmaria80,TRUE,TRUE,"15,000",,,"780,000","845,000","27,027,027","6,081,081",,,99.61%
-slavaAa,slavaAa129,,TRUE,FALSE,,,,"780,000",0,0,0,,,99.61%
 Frankfurt,kobrien,frankfurt-school-mainnet,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.76%
 MIT Digital Currency Initiative,kobrien,mit-digital-currency-initiative-mainnet,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.91%
 w3m,pkrasam,pkrasam,TRUE,Not necessary -- delegation only,0,,,"331,614","359,249","500,000","500,000",1690863.504,0.05%,99.96%
@@ -77,49 +75,3 @@ UCL Blockchain Society,LRUki,LRUki_LBL_UCL,TRUE,Not necessary -- delegation only
 second state 2,hydai,hydai,TRUE,TRUE,0,,,"100,000",0,0,0,100000,0.00%,99.99%
 Zhejiang University,cherideal,cherideal,TRUE,Not necessary -- delegation only,0,,,"100,000",0,0,0,100000,0.00%,100.00%
 LSE Blockchain Society,LRUki,LRUki_LBL_LSE,TRUE,Not necessary -- delegation only,0,,,"100,000",0,0,0,100000,0.00%,100.00%
-Bison Trails 2 (DWS),SEE ABOVE,,FALSE,TRUE,,,,0,0,0,0,,,
-Certus One,,,FALSE,FALSE,,,,0,0,0,0,,,
-Spherical.One,,,FALSE,FALSE,,,,0,0,0,0,,,
-bi23,,,FALSE,FALSE,,,,"2,520,000",0,0,0,,,
-Blockscape,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-IrisNet,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Dragonfly Capital Partners,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-simply vc2,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Hashfield Technologies,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-sr-oasis-node,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Anchorage,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Cornell University Blockchain Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Cambridge Blockchain Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-UIUC Blockchain SIG,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-USF ,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-KCL Blockchain Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Oxford Blockchain Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Tsinghua University,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Adelaide Blockchain Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-McGill University Blockchain Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Cape Town Cryptocurrencies Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Aberdeen AI and Crypto Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Edinburgh Fintech Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Lausanne Blockchain Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Leeds Blockchain Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Technology Sydney Fintech Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Washington Blockchain Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Australian National University (ANU) Blockchain Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-University of Cape Town Cryptocurrencies Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-London School of Economics (LSE) Blockchain Society,,,FALSE,FALSE,,,,,0,0,0,,,
-University of Sydney (UYSD) Blockchain & Cryptocurrency Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-Alethea,,,,FALSE,,,,TBD,0,0,0,,,
-Bankex,,,,FALSE,,,,TBD,0,0,0,,,
-Luther.ai,,,,FALSE,,,,TBD,0,0,0,,,
-Castilise,,,,FALSE,,,,TBD,0,0,0,,,
-Ruyi Health,,,,FALSE,,,,TBD,0,0,0,,,
-Asclepius,,,,FALSE,,,,TBD,0,0,0,,,
-Saferate,,,,FALSE,,,,TBD,0,0,0,,,
-Danilo,,,,FALSE,,,,TBD,0,0,0,,,
-Boxmining,,,,FALSE,,,,TBD,0,0,0,,,
-Cryptodiffer,,,,FALSE,,,,TBD,0,0,0,,,
-Hype partners,,,,FALSE,,,,TBD,0,0,0,,,
-Figment v. 2,,,,FALSE,,,,TBD,0,0,0,,,
-ChainNews,,,,FALSE,,,,TBD,0,0,0,,,
-7x Capital,,,,FALSE,,,,TBD,0,0,0,,,
-KryptoHenry,,,,FALSE,,,,TBD,0,0,0,,,
