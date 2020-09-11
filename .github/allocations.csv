@@ -37,7 +37,7 @@ Staked,sriney-staked,sriney-staked,TRUE,TRUE,"65,000",,,"3,300,000","3,575,000",
 DELIGHT,caramis,caramis,TRUE,TRUE,"60,000",,,"3,300,000","3,575,000","27,027,027","6,081,081","40,043,108",1.18%,69.06%
 Blockscale,lyoungblood,lyoungblood,TRUE,TRUE,"60,000",,,"3,060,000","3,315,000","27,027,027","6,081,081","39,543,108",1.16%,70.22%
 Tesselated Geometry,keefertaylor,keefertaylor,TRUE,TRUE,"55,000",,,"3,060,000","3,315,000","27,027,027","6,081,081","39,538,108",1.16%,71.38%
-Ankr,danielimkk,danielimkk,TRUE,TRUE,"55,000",,,"3,000,000","3,250,000","27,027,027","6,081,081","39,413,108",1.16%,72.54%
+Ankr,danielimkk,ankr-danielimkk,TRUE,TRUE,"55,000",,,"3,000,000","3,250,000","27,027,027","6,081,081","39,413,108",1.16%,72.54%
 UbikCapital,ubikcapital,ubikcapital,TRUE,TRUE,"55,000",,,"2,760,000","2,990,000","27,027,027","6,081,081","38,913,108",1.14%,73.68%
 Bambarello,bambarello,bambarello,TRUE,TRUE,"55,000",,,"2,760,000","2,990,000","27,027,027","6,081,081","38,913,108",1.14%,74.82%
 Code-Breader,code-breader,code-breader,TRUE,TRUE,"55,000",,,"2,760,000","2,990,000","27,027,027","6,081,081","38,913,108",1.14%,75.97%
@@ -72,7 +72,7 @@ slavaAa,slavaAa129,,TRUE,FALSE,,,,"780,000",0,0,0,,,99.61%
 Frankfurt,kobrien,frankfurt-school-mainnet,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.76%
 MIT Digital Currency Initiative,kobrien,mit-digital-currency-initiative-mainnet,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.91%
 w3m,pkrasam,pkrasam,TRUE,Not necessary -- delegation only,0,,,"331,614","359,249","500,000","500,000",1690863.504,0.05%,99.96%
-Blockchain at Berkeley,danielimkk,danielimkk,TRUE,TRUE,"750,000",,,"100,000",0,0,0,"850,000",0.02%,99.99%
+Blockchain at Berkeley,danielimkk,bab-danielimkk,TRUE,TRUE,"750,000",,,"100,000",0,0,0,"850,000",0.02%,99.99%
 UCL Blockchain Society,LRUki,LRUki_LBL_UCL,TRUE,Not necessary -- delegation only,0,,,"100,000",0,0,0,100000,0.00%,99.99%
 second state 2,hydai,hydai,TRUE,TRUE,0,,,"100,000",0,0,0,100000,0.00%,99.99%
 Zhejiang University,cherideal,cherideal,TRUE,Not necessary -- delegation only,0,,,"100,000",0,0,0,100000,0.00%,100.00%
