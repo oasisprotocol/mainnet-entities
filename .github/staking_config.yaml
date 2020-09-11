@@ -7,7 +7,7 @@ accounts:
     csv_label: "---no label---"
 
   community_and_ecosystem:
-    amount: "2269612950"
+    amount: "2269572950"
     address: "oasis1qqfjknq5jlelnfd0xtc38u9t25u467nasuzytpe3"
     csv_label: "Community Delegation"
 
