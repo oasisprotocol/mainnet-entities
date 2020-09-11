@@ -111,7 +111,7 @@ entities:
 ##
 test_only_entities:
   rvg: "100000"
-  #pro-wh: "100000"
+  pro-wh: "100000"
   peterjgilbert: "100000"
 
 # This is the minimum balance that should be left in an account
