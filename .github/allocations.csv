@@ -65,9 +65,9 @@ jr,jrastit,jrastit,TRUE,TRUE,"10,000",,,0,0,"27,027,027","6,081,081","33,118,108
 Infinity Stones,sili-infstones,sili-infstones,TRUE,TRUE,0,,,0,0,"27,027,027","6,081,081","33,108,108",0.97%,99.09%
 THU-cdfa / Tsinghua University,xudoubles,xudoubles,TRUE,TRUE,0,,,"3,300,000","3,575,000",0,0,"6,875,000",0.20%,99.30%
 "Centre for Distributed Ledger Technologies, University of Malta",CentreDLTUM,CentreDLTUM,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.45%
-SSSNodes,gxwuyingjun,,TRUE,FALSE,"45,000",,,"2,280,000",0,0,0,,,99.45%
+SSSNodes,gxwuyingjun,,TRUE,FALSE,,,,"2,280,000",0,0,0,,,99.45%
 Imperial College Blockchain Society,LRUki,LRUki_LBL_Imperial,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.61%
-Archibald,ostrovmaria80,,TRUE,FALSE,,,,"780,000",0,0,0,,,99.61%
+Archibald,ostrovmaria80,ostrovmaria80,TRUE,TRUE,"15,000",,,"780,000","845,000","27,027,027","6,081,081",,,99.61%
 slavaAa,slavaAa129,,TRUE,FALSE,,,,"780,000",0,0,0,,,99.61%
 Frankfurt,kobrien,frankfurt-school-mainnet,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.76%
 MIT Digital Currency Initiative,kobrien,mit-digital-currency-initiative-mainnet,TRUE,Not necessary -- delegation only,0,,,"2,520,000","2,730,000",0,0,5250000,0.15%,99.91%
@@ -86,7 +86,7 @@ IrisNet,,,FALSE,FALSE,,,,TBD,0,0,0,,,
 Dragonfly Capital Partners,,,FALSE,FALSE,,,,TBD,0,0,0,,,
 simply vc2,,,FALSE,FALSE,,,,TBD,0,0,0,,,
 Hashfield Technologies,,,FALSE,FALSE,,,,TBD,0,0,0,,,
-sr-oasis-node,,,FALSE,FALSE,"5,000",,,TBD,0,0,0,,,
+sr-oasis-node,,,FALSE,FALSE,,,,TBD,0,0,0,,,
 Anchorage,,,FALSE,FALSE,,,,TBD,0,0,0,,,
 Cornell University Blockchain Club,,,FALSE,FALSE,,,,TBD,0,0,0,,,
 Cambridge Blockchain Society,,,FALSE,FALSE,,,,TBD,0,0,0,,,
