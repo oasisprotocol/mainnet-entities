@@ -119,7 +119,7 @@ func (a *AccountingGenesis) AddDelegation(from staking.Address, to staking.Addre
 	}
 
 	// Ensure the commission schedule is set since this account is getting
-	// delegations. This is currently set to a bound of 0-20% and a starting rate of 5%
+	// delegations.
 	a.ledger[to].Escrow.CommissionSchedule.Rates = []staking.CommissionRateStep{
 		{
 			Start: 0,
