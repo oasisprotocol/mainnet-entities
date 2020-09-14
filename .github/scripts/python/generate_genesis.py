@@ -9,13 +9,8 @@ import click
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
 
-def add_entities_from_directory(allocations, genesis_command, entity_dir, add_nodes):
+def add_entities_from_directory(genesis_command, entity_dir, add_nodes):
     for entity_name in os.listdir(entity_dir):
-        # skip if this entity doesn't have any tokens
-        if allocations.get(entity_name.lower(), 0) < 200:
-            print('Skipping %s. Not enough tokens' % entity_name)
-            continue
-
         if os.path.isfile(os.path.join(entity_dir, entity_name)):
             continue
         genesis_command.extend([
@@ -47,9 +42,6 @@ def add_entities_from_directory(allocations, genesis_command, entity_dir, add_no
 @click.option('--staking-path', required=False,
               default='/tmp/staking.json',
               type=click.Path(resolve_path=True))
-@click.option('--genesis-allocations-path', required=False,
-              default='.github/genesis_allocations.yaml',
-              type=click.Path(resolve_path=True))
 @click.option('--roothash-path', required=False,
               default='.github/roothash_params.json',
               type=click.Path(resolve_path=True))
@@ -59,20 +51,20 @@ def add_entities_from_directory(allocations, genesis_command, entity_dir, add_no
               default=datetime.now().strftime(DATETIME_FORMAT),
               help='Date time of deployment in UTC as iso8601',
               type=click.DateTime(formats=[DATETIME_FORMAT]))
+@click.option('--halt-epoch', required=True)
+@click.option('--max-validators', required=True)
+@click.option('--min-validators', required=True)
 def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
              test_time_output_path, output_path, staking_path,
-             genesis_allocations_path, roothash_path, chain_id_prefix,
-             test_only, genesis_time):
+             roothash_path, chain_id_prefix,
+             test_only, genesis_time, halt_epoch, max_validators,
+             min_validators):
 
-    # LOADING ALLOCATIONS HERE IS A HACK FOR NOW... Lazy
-    allocations = yaml.safe_load(open(genesis_allocations_path))
-
-    # Dupes don't matter
-    for name, allocation in allocations.copy().items():
-        allocations[name.lower()] = int(allocation)
+    # THIS SCRIPT NO LONGER PRUNES NODES IF THEY DON'T HAVE ENOUGH STAKE. WE
+    # WILL NEED TO DO THAT MANUALLY. THAT WAS TO SAVE FROM WRITING MORE HACKY
+    # CODE. INSTEAD JUST REMOVE OFFENDING ENTITIES
 
     # Hacky overrides for running locally.
-
     timestamp = genesis_time.strftime('%Y-%m-%d-%s')
     chain_id = '%s-%s' % (chain_id_prefix, timestamp)
     if test_only:
@@ -87,19 +79,21 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
         '--staking.token_symbol', 'ROSE',
         '--staking.token_value_exponent', '9',
         # TODO: what halt epoch to use for mainnet?
-        '--halt.epoch', '999999',
+        '--halt.epoch', halt_epoch,
         '--epochtime.tendermint.interval', '600',
         '--consensus.tendermint.timeout_commit', '5s',
         '--consensus.tendermint.empty_block_interval', '0s',
         '--consensus.tendermint.max_tx_size', '32kb',
+        '--consensus.state_checkpoint.chunk_size', '0mb',
+        '--consensus.state_checkpoint.interval', '0',
+        '--consensus.state_checkpoint.num_kept', '0',
         '--registry.max_node_expiration', '2',
         '--consensus.backend', 'tendermint',
-        '--scheduler.max_validators', '100',
+        '--scheduler.max_validators', max_validators,
         '--scheduler.max_validators_per_entity', '1',
     ]
 
     add_entities_from_directory(
-        allocations,
         genesis_command,
         unpacked_entities_path,
         add_nodes=not test_only
@@ -107,14 +101,13 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
 
     if test_only:
         add_entities_from_directory(
-            allocations,
             genesis_command,
             test_entities_path,
             add_nodes=test_only
         )
         genesis_command.extend(['--scheduler.min_validators', '3'])
     else:
-        genesis_command.extend(['--scheduler.min_validators', '15'])
+        genesis_command.extend(['--scheduler.min_validators', min_validators])
 
     # Run genesis command
     subprocess.check_call(genesis_command)

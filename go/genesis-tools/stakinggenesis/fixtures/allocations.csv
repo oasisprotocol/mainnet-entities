@@ -1,0 +1,6 @@
+Entity Name,Github handle,Entity Package Name,Entity Submitted,KYC Complete,"Total Rewards [sum of Quest + Grants, paid out from community & ecosystem]",Account One,Account Two,Extra unused row,Extra unused row
+Test1,test1,test1,TRUE,TRUE,"200,000,000",0,0,0%,10%
+Test2,test2,test2,TRUE,TRUE,"100,000,000","100,000,000",0,0%,10%
+Test3,test3,test3,TRUE,TRUE,"1,000",0,"100,000,000",0%,10%
+Test4,test4,test4,TRUE,TRUE,0,"1,000",0,0%,10%
+blah,,,TRUE,FALSE,0,"1,000",0,0%,10%
