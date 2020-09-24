@@ -57,7 +57,7 @@ jobs:
           --roothash-path .github/roothash_params.json
           --chain-id-prefix mainnet-beta
           --genesis-time 2020-10-01T16:00:00
-          --halt-epoch 336
+          --halt-epoch 1440
           --max-validators 80
           --min-validators 15
 
@@ -94,7 +94,7 @@ jobs:
           --output-path /tmp/genesis.test_only.json
           --staking-path /tmp/staking.test_only.json
           --roothash-path .github/roothash_params.json
-          --halt-epoch 336
+          --halt-epoch 1440
           --max-validators 80
           --min-validators 15
           --test-only
