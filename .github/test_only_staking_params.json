@@ -1596,5 +1596,6 @@
   "fee_split_weight_vote": "1",
   "fee_split_weight_next_propose": "1",
   "reward_factor_epoch_signed": "1",
-  "reward_factor_block_proposed": "0"
+  "reward_factor_block_proposed": "0",
+  "disable_transfers": true
 }
