@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import yaml
 import click
+import base64
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
@@ -119,7 +120,7 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
 
     genesis['roothash'] = roothash_params
     genesis['extra_data'] = {
-        'quote': 'Quis custodiet ipsos custodes? [submitted by Oasis Community Member Daniyar Borangaziyev]',
+        'quote': base64.b64encode(b'Quis custodiet ipsos custodes? [submitted by Oasis Community Member Daniyar Borangaziyev]'),
     }
 
     # HACK generated for testing the genesis with genesis check
