@@ -119,8 +119,10 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
     roothash_params = json.load(open(roothash_path, 'r'))
 
     genesis['roothash'] = roothash_params
+    quote = base64.b64encode(
+        b'Quis custodiet ipsos custodes? [submitted by Oasis Community Member Daniyar Borangaziyev]').decode('utf-8')
     genesis['extra_data'] = {
-        'quote': base64.b64encode(b'Quis custodiet ipsos custodes? [submitted by Oasis Community Member Daniyar Borangaziyev]'),
+        'quote': quote,
     }
 
     # HACK generated for testing the genesis with genesis check
