@@ -10,7 +10,7 @@ DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S'
 
 
 def add_entities_from_directory(genesis_command, entity_dir, add_nodes):
-    for entity_name in os.listdir(entity_dir):
+    for entity_name in sorted(os.listdir(entity_dir)):
         if os.path.isfile(os.path.join(entity_dir, entity_name)):
             continue
         genesis_command.extend([
@@ -78,7 +78,6 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
         '--staking', staking_path,
         '--staking.token_symbol', 'ROSE',
         '--staking.token_value_exponent', '9',
-        # TODO: what halt epoch to use for mainnet?
         '--halt.epoch', halt_epoch,
         '--epochtime.tendermint.interval', '600',
         '--consensus.tendermint.timeout_commit', '5s',
