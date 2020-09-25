@@ -27,6 +27,12 @@ jobs:
       - name: Unpack oasis-node
         run: cd /tmp && tar xvf oasis_core_linux_amd64.tar.gz && mv oasis_core_20.10_linux_amd64/oasis-node /tmp/oasis-node && chmod +x /tmp/oasis-node
 
+      - name: Download oasis-node with genesis convert
+        run: curl -Lo /tmp/oasis_node_genesis_convert.tar.gz https://github.com/oasisprotocol/mainnet-entities/releases/download/DO_NOT_USE/oasis-node-genesis-convert.tar.gz
+
+      - name: Unpack oasis-node with genesis convert
+        run: mkdir /tmp/convert && mv /tmp/oasis_node_genesis_convert.tar.gz /tmp/convert/oasis_node.tar.gz && cd /tmp/convert && tar xvf oasis_node.tar.gz
+
       - name: Validate entity packages
         run: mkdir /tmp/unpack && python3 .github/scripts/python/unpack_entities.py ./entities /tmp/unpack
 
@@ -51,7 +57,7 @@ jobs:
           python3 .github/scripts/python/generate_genesis.py
           --unpacked-entities-path /tmp/unpack
           --oasis-node-path /tmp/oasis-node
-          --output-path /tmp/genesis.pre_prod.json
+          --output-path /tmp/genesis-raw.pre_prod.json
           --test-time-output-path /tmp/genesis.pre_prod.test_time.json
           --staking-path /tmp/staking.pre_prod.json
           --roothash-path .github/roothash_params.json
@@ -60,6 +66,12 @@ jobs:
           --halt-epoch 1440
           --max-validators 80
           --min-validators 15
+
+      - name: Convert genesis to canonical form
+        run: >-
+          /tmp/convert/oasis-node genesis convert
+          -g /tmp/genesis-raw.pre_prod.json
+          -C /tmp/genesis.pre_prod.json
 
       - name: Upload the "pre-production" genesis document
         uses: actions/upload-artifact@v1
@@ -91,13 +103,19 @@ jobs:
           --unpacked-entities-path /tmp/unpack
           --test-entities-path /tmp/test_only_unpack
           --oasis-node-path /tmp/oasis-node
-          --output-path /tmp/genesis.test_only.json
+          --output-path /tmp/genesis-raw.test_only.json
           --staking-path /tmp/staking.test_only.json
           --roothash-path .github/roothash_params.json
           --halt-epoch 1440
           --max-validators 80
           --min-validators 15
           --test-only
+
+      - name: Convert genesis to canonical form
+        run: >-
+          /tmp/convert/oasis-node genesis convert
+          -g /tmp/genesis-raw.test_only.json
+          -C /tmp/genesis.test_only.json
 
       - name: Upload the "test_only" genesis document
         uses: actions/upload-artifact@v1
