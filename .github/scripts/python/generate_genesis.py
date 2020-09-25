@@ -118,6 +118,7 @@ def generate(unpacked_entities_path, test_entities_path, oasis_node_path,
     roothash_params = json.load(open(roothash_path, 'r'))
 
     genesis['roothash'] = roothash_params
+    genesis['extra_data'] = 'Quis custodiet ipsos custodes? [submitted by Oasis Community Member Daniyar Borangaziyev]'
 
     # HACK generated for testing the genesis with genesis check
     json.dump(genesis, open(test_time_output_path, 'w'),
